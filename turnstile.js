@@ -1,4 +1,19 @@
+// ==UserScript==
+// @name         Token Turnstile Clf
+// @namespace    https://viayoo.com/1wssfw
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @run-at       document-end
+// @match        https://*/*
+// @grant        none
+// ==/UserScript==
+
 (function() {
+    'use strict';
+
+(function() {
+    // ======= STYLE MINI =======
     let style = `
         #turnstileOutput {
             position: fixed;
@@ -30,11 +45,76 @@
         #btnCopy { background-color: #4CAF50; top: 70px; }
         #btnDownload { background-color: #2196F3; top: 95px; }
     `;
+
     let styleTag = document.createElement('style');
     styleTag.innerHTML = style;
     document.head.appendChild(styleTag);
+
+    // ======= TEXTAREA =======
     let output = document.createElement('textarea');
     output.id = 'turnstileOutput';
+    output.placeholder = 'Token Turnstile';
+    document.body.appendChild(output);
+
+    // ======= TOMBOL COPY =======
+    let btnCopy = document.createElement('button');
+    btnCopy.id = 'btnCopy';
+    btnCopy.innerText = 'Copy';
+    document.body.appendChild(btnCopy);
+
+    btnCopy.onclick = function() {
+        output.select();
+        document.execCommand('copy');
+        alert('Token berhasil dicopy ✅');
+    };
+
+    // ======= TOMBOL DOWNLOAD =======
+    let btnDownload = document.createElement('button');
+    btnDownload.id = 'btnDownload';
+    btnDownload.innerText = 'Download';
+    document.body.appendChild(btnDownload);
+
+    btnDownload.onclick = function() {
+        let blob = new Blob([output.value], {type: 'text/plain'});
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'tokencf.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // ======= FUNGSI GRAB TOKEN =======
+    function grabTokens() {
+        let tokens = [];
+
+        // Input hidden Turnstile
+        document.querySelectorAll('input[name="cf-turnstile-response"]').forEach(i => {
+            if(i.value) tokens.push(i.value);
+        });
+
+        // Global Turnstile widget
+        if(window.turnstile && window.turnstile._widgetIds) {
+            window.turnstile._widgetIds.forEach(id => {
+                let widget = window.turnstile.getResponse(id);
+                if(widget) tokens.push(widget);
+            });
+        }
+
+        // Update textarea
+        if(tokens.length > 0) {
+            output.value = tokens.filter((v,i,a) => a.indexOf(v)===i).join('\n');
+        } else {
+            output.value = '';
+        }
+    }
+
+    // Update setiap detik
+    setInterval(grabTokens, 1000);
+
+    console.log('Turnstile Token Mini Capture siap ✅');
+})();
+})();    output.id = 'turnstileOutput';
     output.placeholder = 'Token Turnstile';
     document.body.appendChild(output);
     let btnCopy = document.createElement('button');
