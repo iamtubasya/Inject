@@ -1,5 +1,4 @@
 (function() {
-    // ======= STYLE MINI =======
     let style = `
         #turnstileOutput {
             position: fixed;
@@ -31,30 +30,22 @@
         #btnCopy { background-color: #4CAF50; top: 70px; }
         #btnDownload { background-color: #2196F3; top: 95px; }
     `;
-
     let styleTag = document.createElement('style');
     styleTag.innerHTML = style;
     document.head.appendChild(styleTag);
-
-    // ======= TEXTAREA =======
     let output = document.createElement('textarea');
     output.id = 'turnstileOutput';
     output.placeholder = 'Token Turnstile';
     document.body.appendChild(output);
-
-    // ======= TOMBOL COPY =======
     let btnCopy = document.createElement('button');
     btnCopy.id = 'btnCopy';
     btnCopy.innerText = 'Copy';
     document.body.appendChild(btnCopy);
-
     btnCopy.onclick = function() {
         output.select();
         document.execCommand('copy');
         alert('Token berhasil dicopy ✅');
     };
-
-    // ======= TOMBOL DOWNLOAD =======
     let btnDownload = document.createElement('button');
     btnDownload.id = 'btnDownload';
     btnDownload.innerText = 'Download';
@@ -69,17 +60,12 @@
         link.click();
         document.body.removeChild(link);
     };
-
-    // ======= FUNGSI GRAB TOKEN =======
     function grabTokens() {
         let tokens = [];
-
-        // Input hidden Turnstile
         document.querySelectorAll('input[name="cf-turnstile-response"]').forEach(i => {
             if(i.value) tokens.push(i.value);
         });
 
-        // Global Turnstile widget
         if(window.turnstile && window.turnstile._widgetIds) {
             window.turnstile._widgetIds.forEach(id => {
                 let widget = window.turnstile.getResponse(id);
@@ -87,7 +73,6 @@
             });
         }
 
-        // Update textarea
         if(tokens.length > 0) {
             output.value = tokens.filter((v,i,a) => a.indexOf(v)===i).join('\n');
         } else {
@@ -95,8 +80,7 @@
         }
     }
 
-    // Update setiap detik
     setInterval(grabTokens, 1000);
 
-    console.log('Turnstile Token Mini Capture siap ✅');
+    console.log('Turnstile Capture siap ✅');
 })();
