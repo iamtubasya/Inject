@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Token Turnstile Clf
-// @namespace    https://viayoo.com/1wssfw
+// @name         Turnstile | By : @iamtubasya
+// @namespace    https://x.com/fifteennv2k
 // @version      0.1
 // @description  try to take over the world!
-// @author       You
+// @author       iamtubasya
 // @run-at       document-end
 // @match        https://*/*
 // @grant        none
